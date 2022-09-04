@@ -34,9 +34,9 @@ void RayCastingSimulator::OutPPM()
 		{
 			for (int i = 0; i < WIN_WIDTH; i++)
 			{
-				ppm << static_cast<int>(mScreen[j][i].GetRed()) << ' '
-					<< static_cast<int>(mScreen[j][i].GetGreen()) << ' '
-					<< static_cast<int>(mScreen[j][i].GetBlue()) << '\n';
+				char arr[32];
+				sprintf(arr, "%d %d %d\n", static_cast<int>(mScreen[j][i].GetRed()), static_cast<int>(mScreen[j][i].GetGreen()), static_cast<int>(mScreen[j][i].GetBlue()));
+				ppm << arr;
 			}
 		}
 		ppm.close();
@@ -64,7 +64,7 @@ void RayCastingSimulator::CalculateMinDistanceObject(const Ray &ray, float * con
 	const auto &objects = SceneManager::GetInstance()->GetObjects();
 	for (const Object* object : objects)
 	{
-		const float distance = object->CalculateIntersectDistanceOrNan(ray);
+		const float distance = object->CalcIntersectDistanceOrNan(ray);
 		if (!isnan(distance) && distance < *outDistance)
 		{
 			*outDistance = distance;
@@ -104,14 +104,14 @@ Color RayCastingSimulator::castSingleRay(const Ray& ray)
 		//TODO apply normal map
 	}
 		
-	const Color ambientColor = minDistanceObject->CalculateAmbientColor(intersectionPoint);
+	const Color ambientColor = minDistanceObject->CalcAmbientColor(intersectionPoint);
 	
-	const Vector4D intersectionNormal = minDistanceObject->CalculateNormalVector(intersectionPoint, ray.GetOrigin());
+	const Vector4D intersectionNormal = minDistanceObject->CalcNormalVector(intersectionPoint, ray.GetOrigin());
 	intersectionPoint = intersectionPoint + intersectionNormal * 0.01f;
-	const Color diffuseColor = minDistanceObject->CalculateDiffuseColor(intersectionPoint, intersectionNormal);
+	const Color diffuseColor = minDistanceObject->CalcDiffuseColor(intersectionPoint, intersectionNormal);
 	
 	const Vector4D normalizedReflectedRay = ray.GetNomalizedDirection().GetNormalizedReflection(intersectionNormal);
-	const Color specularColor = minDistanceObject->CalculateSpecularLight(normalizedReflectedRay, intersectionPoint);
+	const Color specularColor = minDistanceObject->CalcSpecularLight(normalizedReflectedRay, intersectionPoint);
 
 	Color color = ambientColor + diffuseColor + specularColor;
 	//unsigned int a = ambientColor.ToHex() + specularColor.ToHex() + diffuseColor.ToHex();
