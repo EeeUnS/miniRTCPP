@@ -175,7 +175,7 @@ bool Object::isHeightRange(const Ray& ray, float distance) const
 int Object::num = 0;
 
 //return smaller distance or nan
-float Object::CalculateIntersectDistanceOrNan(const Ray& ray) const
+float Object::CalcIntersectDistanceOrNan(const Ray& ray) const
 {
 	num++;
 	Vector4D objectOriginToRayOrigin = ray.GetOrigin() - mOrigin;
@@ -208,7 +208,7 @@ float Object::CalculateIntersectDistanceOrNan(const Ray& ray) const
 	return (NAN);
 }
 
-Vector4D Object::CalculateNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
+Vector4D Object::CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
 {
 	
 	Vector4D originToIntersection = intersection - mOrigin;
@@ -229,7 +229,7 @@ Vector4D Object::CalculateNormalVector(const Vector4D& intersection, const Vecto
 }
 
 
-Color Object::CalculateAmbientColor(const Vector4D& intersectionPoint) const
+Color Object::CalcAmbientColor(const Vector4D& intersectionPoint) const
 {
 	Color obColor = mColor;
 
@@ -278,7 +278,7 @@ float Object::diffuseHelper(const Light &light, const Vector4D &intersectionNorm
 	return diffuse;
 }
 
-Color Object::CalculateDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const
+Color Object::CalcDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const
 {
 	Color obColor = mColor;
 	
@@ -342,7 +342,7 @@ float	Object::specular_helper(
 	return (specular);
 }
 
-Color Object::CalculateSpecularLight(const Vector4D& normalizedReflectedRay, const Vector4D& intersectionPoint) const
+Color Object::CalcSpecularLight(const Vector4D& normalizedReflectedRay, const Vector4D& intersectionPoint) const
 {
 	
 	Color color;

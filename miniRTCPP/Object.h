@@ -52,12 +52,12 @@ public:
 	static int num;
 
 	//virtual
-	virtual Vector4D CalculateNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const;
-	virtual float CalculateIntersectDistanceOrNan(const Ray& ray) const;
+	virtual Vector4D CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const;
+	virtual float CalcIntersectDistanceOrNan(const Ray& ray) const;
 
-	Color CalculateAmbientColor(const Vector4D& intersectionPoint) const;
-	Color CalculateDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const;
-	Color CalculateSpecularLight(const Vector4D& mirrorRay, const Vector4D& intersectionPoint) const;
+	Color CalcAmbientColor(const Vector4D& intersectionPoint) const;
+	Color CalcDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const;
+	Color CalcSpecularLight(const Vector4D& mirrorRay, const Vector4D& intersectionPoint) const;
 protected:
 	Matrix4x4 mCoefs;
 

@@ -31,12 +31,12 @@ Plain::Plain(
 	mCoefs = coefs;
 }
 
-Vector4D Plain::CalculateNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
+Vector4D Plain::CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
 {
 	return GetNormalizedDirection();
 }
 
-float Plain::CalculateIntersectDistanceOrNan(const Ray& ray) const
+float Plain::CalcIntersectDistanceOrNan(const Ray& ray) const
 {
 	const float cos = ray.GetNomalizedDirection().Dot(GetNormalizedDirection());
 	if (std::abs(cos) < FLT_EPSILON)
