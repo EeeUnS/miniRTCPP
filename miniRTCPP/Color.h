@@ -9,7 +9,8 @@ public:
 	Color(unsigned char r, unsigned char g, unsigned char b);
 	unsigned int ToHex() const;
 	Color operator+(const Color& a) const;
-	Color operator*(float a);
+	Color operator*(const Color& a) const;
+	Color operator*(float a) const;
 	unsigned char GetRed() const;
 	unsigned char GetBlue() const;
 	unsigned char GetGreen() const;

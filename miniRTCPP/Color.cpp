@@ -19,7 +19,16 @@ Color Color::operator+(const Color& a) const
 	return Color(mRed + a.mRed, mGreen + a.mGreen, mBlue + a.mBlue);
 }
 
-Color Color::operator*(float a)
+Color Color::operator*(const Color& a) const
+{
+	const float red = (((float)mRed * ((float)a.mRed / 255)));
+	const float green = (((float)mGreen * ((float)a.mGreen / 255)));
+	const float blue = (((float)mBlue * ((float)a.mBlue / 255)));
+
+	return Color((unsigned char)red, (unsigned char)green, (unsigned char)blue);
+}
+
+Color Color::operator*(float a) const
 {
 	//ASSERT(a > 1);
 	if (a > 1 || a < 0)
