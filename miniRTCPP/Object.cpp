@@ -208,6 +208,104 @@ float Object::CalcIntersectDistanceOrNan(const Ray& ray) const
 	return (NAN);
 }
 
+void Object::CalcSpecularAndDiffuseScale(
+	const Light& light, 
+	const Ray& ray, 
+	const Vector4D& intersectionNormal,
+	const Vector4D& intersectionPoint,
+	float * const outDiffuseScale,
+	float * const outSpecularScale
+) const
+{
+	const Vector4D normalizedReflectedRay = ray.GetNomalizedDirection().GetNormalizedReflection(intersectionPoint);
+
+	const Vector4D pToLight = light.GetOrigin() - intersectionPoint;
+	const float pToLightLen = pToLight.Length();
+	const Ray intersectionToLight(intersectionPoint, pToLight / pToLightLen );
+	
+	*outDiffuseScale = intersectionToLight.GetNomalizedDirection().Dot(intersectionNormal);
+	*outSpecularScale = intersectionToLight.GetNomalizedDirection().Dot(normalizedReflectedRay);
+
+	if (*outDiffuseScale <= 0 && *outSpecularScale <= 0)
+	{
+		*outDiffuseScale = 0;
+		*outSpecularScale = 0;
+		return ;
+	}
+
+	float distance = NAN;
+	const Object* object = nullptr;
+	RayCastingSimulator::GetInstance()->CalcMinDistanceObject(intersectionToLight, &distance, &object);
+	if (!isnan(distance) && distance < pToLightLen + FLT_EPSILON)
+	{
+		//object collaps
+		*outDiffuseScale = 0;
+		*outSpecularScale = 0;
+		return ;
+	}
+
+	*outDiffuseScale *= light.GetBright();
+	*outDiffuseScale *= (1 - mSpecularRS);
+
+	*outSpecularScale = mSpecularRS * powf(*outSpecularScale, static_cast<float>(mSpecularNS));
+	*outSpecularScale *= light.GetBright();
+}
+
+Color Object::CalcSpecularAndDiffuseLight(const Ray& ray, const Vector4D& intersectionPoint) const
+{
+	
+	//TODO texture, disruption
+	Color obColor = mColor;
+
+	Color color;
+
+	const auto& lights = SceneManager::GetInstance()->GetLights();
+	for (const Light& light : lights)
+	{
+		const Vector4D intersectionNormal = CalcNormalVector(intersectionPoint, ray.GetOrigin());
+		const Vector4D fixIntersectionPoint = intersectionPoint + intersectionNormal * 0.01f;
+
+		float diffuseScale;
+		float specularScale;
+		CalcSpecularAndDiffuseScale(light, ray, intersectionNormal, fixIntersectionPoint, &diffuseScale, &specularScale);
+
+		if (diffuseScale > FLT_EPSILON)
+		{
+			const Color lightColor = light.GetColor();
+			const Color colorr = lightColor * obColor;
+
+			const Color diffuseSingleLightColor = colorr * diffuseScale;
+			color = color + diffuseSingleLightColor;
+		}
+		if (specularScale > FLT_EPSILON)
+		{
+			const Color lightSpecular = light.GetColor() * specularScale;
+			color = color + lightSpecular;
+		}
+	}
+	return (color);
+}
+
+Color Object::CalcPhongModelColor(const Ray& ray, const float distance) const
+{
+	{
+		//TODO apply normal map
+	}
+	const Vector4D rayToIntersection = ray.GetNomalizedDirection() * (distance);
+	ASSERT(rayToIntersection.Dot(ray.GetNomalizedDirection()) > 0);
+	Vector4D intersectionPoint = rayToIntersection + ray.GetOrigin();
+
+	const Color ambientColor = CalcAmbientColor(intersectionPoint);
+
+	const Color specularAndDiffuseColor = CalcSpecularAndDiffuseLight(ray, intersectionPoint);
+
+	unsigned int a = ambientColor.ToHex() + specularAndDiffuseColor.ToHex();
+	ASSERT((a & 0xFF) == 0);
+	Color	color((a >> 8) & 0xFF, (a >> 16) & 0xFF, (a >> 24) & 0xFF);
+
+	return color;
+}
+
 Vector4D Object::CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
 {
 	
@@ -249,118 +347,4 @@ Color Object::CalcAmbientColor(const Vector4D& intersectionPoint) const
 	Color ambientColor(static_cast<unsigned char>(red), static_cast<unsigned char>(green), static_cast<unsigned char>(blue));
 
 	return ambientColor;
-}
-
-float Object::diffuseHelper(const Light &light, const Vector4D &intersectionNormal, const Vector4D &intersectionPoint) const
-{
-	const Vector4D pToLight = light.GetOrigin() - intersectionPoint;
-	const Ray intersectionToLight(
-		intersectionPoint,
-		pToLight.Normalize()
-	);
-	float diffuse = intersectionToLight.GetNomalizedDirection().Dot(intersectionNormal);
-	if (diffuse < 0)
-	{
-		return 0;
-	}
-
-	float distance;
-	const Object *object;
-	RayCastingSimulator::GetInstance()->CalculateMinDistanceObject(intersectionToLight, &distance, &object);
-	const float pToLightLen = pToLight.Length();
-	if (!isnan(distance) && distance < pToLightLen + FLT_EPSILON)
-	{
-		// on other object in light ray, intersectionPoint is shadow
-		return 0;
-	}
-
-	diffuse *= light.GetBright();
-	return diffuse;
-}
-
-Color Object::CalcDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const
-{
-	Color obColor = mColor;
-	
-	//TODO texture, disruption
-	Color diffuseColor;
-	const std::vector<Light> &lights = SceneManager::GetInstance()->GetLights();
-	for (const Light& light : lights)
-	{
-		const float diffuse = diffuseHelper(light, intersectionNormal, intersectionPoint);
-		if (diffuse < FLT_EPSILON)
-		{
-			continue;
-		}
-
-		const Color lightColor = light.GetColor();
-		float red = (((float)lightColor.GetRed() * ((float)obColor.GetRed() / 255)));
-		float green = (((float)lightColor.GetGreen() * ((float)obColor.GetGreen() / 255)));
-		float blue = (((float)lightColor.GetBlue() * ((float)obColor.GetBlue() / 255)));
-		const float scale = (diffuse * (1 - mSpecularRS));
-		red = red * scale;
-		green = green * scale;
-		blue = blue * scale;
-		
-		const Color diffuseSingleLightColor(
-			static_cast<unsigned char>(red), 
-			static_cast<unsigned char>(green), 
-			static_cast<unsigned char>(blue)
-		);
-		diffuseColor = diffuseColor + diffuseSingleLightColor;
-	}
-	return diffuseColor;
-}
-
-//TODO naming change
-float	Object::specular_helper(
-	const Light &light,
-	const Vector4D &normalizedReflectedRay,
-	const Vector4D &intersectionPoint
-) const 
-{
-	//ASSERT(mCoefs[3].GetW() != -25);
-	const Vector4D pToLight = light.GetOrigin() - intersectionPoint;
-	const Ray intersectionToLight(
-		intersectionPoint,
-		pToLight.Normalize()
-	);
-
-	float specular = intersectionToLight.GetNomalizedDirection().Dot(normalizedReflectedRay);
-	//ASSERT(specular >= FLT_EPSILON);
-	if (specular <= FLT_EPSILON)
-	{
-		return 0;
-	}
-	//ASSERT(mCoefs[3].GetW() != -25, "for debug");
-	float distance = NAN;
-	const Object* object = nullptr;
-	RayCastingSimulator::GetInstance()->CalculateMinDistanceObject(intersectionToLight, &distance, &object);
-	const float pToLightLength = pToLight.Length();
-	if (!isnan(distance) && distance < pToLightLength + FLT_EPSILON)
-		return (0);
-	return (specular);
-}
-
-Color Object::CalcSpecularLight(const Vector4D& normalizedReflectedRay, const Vector4D& intersectionPoint) const
-{
-	
-	Color color;
-	const auto &lights = SceneManager::GetInstance()->GetLights();
-
-	for (const Light& light : lights)
-	{
-		float specular = specular_helper(light, normalizedReflectedRay, intersectionPoint);
-		specular = mSpecularRS * powf(specular, static_cast<float>(mSpecularNS));
-		if (specular < FLT_EPSILON)
-		{
-			continue;
-		}
-		
-		const float scale = specular * light.GetBright();
-		const Color lightSpecular = light.GetColor() * scale ;
-		color = color + lightSpecular;
-	}
-
-	return (color);
 }

@@ -56,7 +56,7 @@ RayCastingSimulator* RayCastingSimulator::GetInstance()
 
 // TODO goto Ray member function
 //find min distance Intersect Object
-void RayCastingSimulator::CalculateMinDistanceObject(const Ray &ray, float * const outDistance, const Object ** outObject)
+void RayCastingSimulator::CalcMinDistanceObject(const Ray &ray, float * const outDistance, const Object ** outObject)
 {
 	*outDistance = INFINITY;
 
@@ -78,8 +78,8 @@ int RayCastingSimulator::objectHit= 0;
 Color RayCastingSimulator::castSingleRay(const Ray& ray)
 {
 	float minDistance = INFINITY;
-	const Object *minDistanceObject = nullptr;
-	CalculateMinDistanceObject(ray, &minDistance, &minDistanceObject);
+	const Object* minDistanceObject = nullptr;
+	CalcMinDistanceObject(ray, &minDistance, &minDistanceObject);
 
 	if (minDistanceObject == nullptr)
 	{
@@ -89,31 +89,20 @@ Color RayCastingSimulator::castSingleRay(const Ray& ray)
 	ASSERT(minDistance > FLT_EPSILON);
 	ASSERT(minDistance != INFINITY);
 	ASSERT(minDistanceObject != nullptr);
+	objectHit++;
 
 	//Phong reflection model
 
 	const Vector4D rayToIntersection = ray.GetNomalizedDirection() * (minDistance);
 	ASSERT(rayToIntersection.Dot(ray.GetNomalizedDirection()) > 0);
-
 	Vector4D intersectionPoint = rayToIntersection + ray.GetOrigin();
 
-	objectHit++;
-	
 	// phong_reflection;
 	{
 		//TODO apply normal map
 	}
-		
-	const Color ambientColor = minDistanceObject->CalcAmbientColor(intersectionPoint);
-	
-	const Vector4D intersectionNormal = minDistanceObject->CalcNormalVector(intersectionPoint, ray.GetOrigin());
-	intersectionPoint = intersectionPoint + intersectionNormal * 0.01f;
-	const Color diffuseColor = minDistanceObject->CalcDiffuseColor(intersectionPoint, intersectionNormal);
-	
-	const Vector4D normalizedReflectedRay = ray.GetNomalizedDirection().GetNormalizedReflection(intersectionNormal);
-	const Color specularColor = minDistanceObject->CalcSpecularLight(normalizedReflectedRay, intersectionPoint);
 
-	Color color = ambientColor + diffuseColor + specularColor;
+	Color color = minDistanceObject->CalcPhongModelColor(ray, minDistance);
 	//unsigned int a = ambientColor.ToHex() + specularColor.ToHex() + diffuseColor.ToHex();
 	//unsigned int a = ambientColor.ToHex() + specularColor.ToHex(); //+ diffuseColor.ToHex();/// +specularColor.ToHex();
 	//ASSERT((a & 0xFF) == 0);

@@ -55,21 +55,25 @@ public:
 	virtual Vector4D CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const;
 	virtual float CalcIntersectDistanceOrNan(const Ray& ray) const;
 
-	Color CalcAmbientColor(const Vector4D& intersectionPoint) const;
-	Color CalcDiffuseColor(const Vector4D& intersectionPoint, const Vector4D& intersectionNormal) const;
-	Color CalcSpecularLight(const Vector4D& mirrorRay, const Vector4D& intersectionPoint) const;
+	Color CalcPhongModelColor(const Ray &ray, const float distance) const;
+	void CalcSpecularAndDiffuseScale(
+		const Light& light,
+		const Ray& ray,
+		const Vector4D& intersectionNormal,
+		const Vector4D& intersectionPoint,
+		float* const outDiffuseScale,
+		float* const outSpecularScale
+	) const;
+
 protected:
 	Matrix4x4 mCoefs;
 
 private:
-	float	specular_helper(
-		const Light& light,
-		const Vector4D& normalizedReflectedRay,
-		const Vector4D& intersectionPoint
-	) const;
 	Vector4D getTan() const;
-	float diffuseHelper(const Light& light, const Vector4D& intersectionNormal, const Vector4D& intersectionPoint) const;
 	bool isHeightRange(const Ray& ray, float distance) const;
+	Color calcSpecularAndDiffuseLight(const Ray& ray, const Vector4D& intersectionPoint) const;
+	Color calcAmbientColor(const Vector4D& intersectionPoint) const;
+
 	Vector4D mOrigin;
 	Vector4D mNormalizedDirection;
 	Vector4D mTan;

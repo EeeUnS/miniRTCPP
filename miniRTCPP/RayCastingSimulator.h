@@ -12,7 +12,7 @@ public:
 	void executeRayCasting();
 	void OutPPM();
 	static RayCastingSimulator* GetInstance();
-	void CalculateMinDistanceObject(const Ray& ray, float* const outDistance, const Object** outObject);
+	void CalcMinDistanceObject(const Ray& ray, float* const outDistance, const Object** outObject);
 private:
 	static RayCastingSimulator* instance;
 
