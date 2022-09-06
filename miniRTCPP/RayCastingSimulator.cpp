@@ -26,7 +26,7 @@ void RayCastingSimulator::OutPPM()
 		  << (int)pix_col.y << ' '
 		  << (int)pix_col.z << '\n';
 */
-	try
+	//try
 	{
 		std::ofstream ppm("output.ppm");
 		ppm << "P3\n" << WIN_WIDTH << ' ' << WIN_HEIGHT << ' ' << "255\n";
@@ -41,10 +41,10 @@ void RayCastingSimulator::OutPPM()
 		}
 		ppm.close();
 	}
-	catch (const std::exception&)
+	/*catch (const std::exception&)
 	{
 		std::cout << "Someting error out ppm " << std::endl;
-	}
+	}*/
 }
 
 RayCastingSimulator* RayCastingSimulator::GetInstance()

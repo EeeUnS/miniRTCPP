@@ -251,7 +251,7 @@ void Object::CalcSpecularAndDiffuseScale(
 	*outSpecularScale *= light.GetBright();
 }
 
-Color Object::CalcSpecularAndDiffuseLight(const Ray& ray, const Vector4D& intersectionPoint) const
+Color Object::calcSpecularAndDiffuseLight(const Ray& ray, const Vector4D& intersectionPoint) const
 {
 	
 	//TODO texture, disruption
@@ -295,9 +295,9 @@ Color Object::CalcPhongModelColor(const Ray& ray, const float distance) const
 	ASSERT(rayToIntersection.Dot(ray.GetNomalizedDirection()) > 0);
 	Vector4D intersectionPoint = rayToIntersection + ray.GetOrigin();
 
-	const Color ambientColor = CalcAmbientColor(intersectionPoint);
+	const Color ambientColor = calcAmbientColor(intersectionPoint);
 
-	const Color specularAndDiffuseColor = CalcSpecularAndDiffuseLight(ray, intersectionPoint);
+	const Color specularAndDiffuseColor = calcSpecularAndDiffuseLight(ray, intersectionPoint);
 
 	unsigned int a = ambientColor.ToHex() + specularAndDiffuseColor.ToHex();
 	ASSERT((a & 0xFF) == 0);
@@ -327,7 +327,7 @@ Vector4D Object::CalcNormalVector(const Vector4D& intersection, const Vector4D& 
 }
 
 
-Color Object::CalcAmbientColor(const Vector4D& intersectionPoint) const
+Color Object::calcAmbientColor(const Vector4D& intersectionPoint) const
 {
 	Color obColor = mColor;
 

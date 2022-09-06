@@ -1,11 +1,14 @@
 #pragma once
+#include <smmintrin.h>
+
 class Vector4D
 {
 public:
 	Vector4D();
 	Vector4D(float x, float y, float z);
 	Vector4D(float x, float y, float z, float w);
-
+	Vector4D(__m128 simd);
+	
 	Vector4D	operator+(const Vector4D& b) const;
 	Vector4D	operator-(const Vector4D& b) const;
 	Vector4D	operator*(float scalar) const;
@@ -27,9 +30,18 @@ public:
 	void SetW(float w);
 	Vector4D GetNormalizedReflection(const Vector4D& normal) const;
 private:
-	float	mX;
-	float	mY;
-	float	mZ;
-	float	mW;
+
+	union
+	{
+		__declspec(align(16))
+		__m128 mSimd;
+		struct
+		{
+			float	mX;
+			float	mY;
+			float	mZ;
+			float	mW;
+		};
+	};
 };
 

@@ -12,21 +12,11 @@ Vector4D::Vector4D(float mX, float mY, float mZ, float mW) : mX(mX), mY(mY), mZ(
 
 Vector4D	Vector4D::operator+(const Vector4D& b) const
 {
-	//const __m128 cc =  *reinterpret_cast<const __m128 *>(this);
-	//const __m128 dd = *reinterpret_cast<const __m128*>(&b);
-	//const __m128 kk = _mm_add_ps(cc, dd);
-	//return Vector4D(*reinterpret_cast<const Vector4D*>(&kk));
-
 	return (Vector4D(mX + b.mX, mY + b.mY, mZ + b.mZ, mW + b.mW));
 }
 
 Vector4D	Vector4D::operator-(const Vector4D& b) const
 {
-	//const __m128 cc = *reinterpret_cast<const __m128*>(this);
-	//const __m128 dd = *reinterpret_cast<const __m128*>(&b);
-	//const __m128 kk = _mm_sub_ps(cc, dd);
-	//return Vector4D(*reinterpret_cast<const Vector4D*>(&kk));
-
 	return (Vector4D(mX - b.mX, mY - b.mY, mZ - b.mZ, mW - b.mW));
 }
 

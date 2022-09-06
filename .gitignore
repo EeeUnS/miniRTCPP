@@ -397,3 +397,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 miniRTCPP/output.ppm
+miniRTCPP/output.ppm
+*.ppm
