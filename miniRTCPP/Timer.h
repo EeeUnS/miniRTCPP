@@ -4,10 +4,8 @@
 #include <string>
 #include <vector>
 //std::chrono::duration<long long, std::nano>
-class Timer
+namespace Timer
 {
-	static std::vector< std::chrono::steady_clock::time_point> chrono;
-public:
-	static void start();
-	static void end(const std::string &Information);
+	void start();
+	void end(const std::string &Information);
 };

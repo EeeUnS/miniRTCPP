@@ -1,8 +1,9 @@
 
 #include "Timer.h"
 #include <iostream>
+#include "ASSERT.h"
 
-std::vector<std::chrono::steady_clock::time_point> Timer::chrono;
+std::vector<std::chrono::steady_clock::time_point> chrono;
 
 void Timer::start()
 {
@@ -13,6 +14,8 @@ void Timer::start()
 
 void Timer::end(const std::string& Information)
 {
+    ASSERT (chrono.size() > 0 );
+
     auto start = chrono.back();
     chrono.pop_back();
     auto end = std::chrono::steady_clock::now() - start;
