@@ -9,3 +9,7 @@
 #else
 	#define ASSERT(expr, ...) 
 #endif // DEBUG
+
+#define GOTO_BEGIN do {
+#define GOTO_END } while(0);
+#define GOTO_OUT break
