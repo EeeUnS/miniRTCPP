@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="DDraw.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="ASSERT.h" />
     <ClInclude Include="Cam.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="DDraw.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="mlx.h" />

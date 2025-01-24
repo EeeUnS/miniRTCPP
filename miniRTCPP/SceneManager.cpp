@@ -95,7 +95,11 @@ Color SceneManager::getColor(std::stringstream& stringstream) const
 	
 	checkValidColorRange(ret);
 
-	return Color(ret[0],ret[1],ret[2]);
+	ASSERT(ret[0] <= 255);
+	ASSERT(ret[1] <= 255);
+	ASSERT(ret[2] <= 255);
+
+	return Color((unsigned char)ret[0], (unsigned char) ret[1], (unsigned char) ret[2]);
 }
 
 float SceneManager::getFloat(std::stringstream& stringstream) const

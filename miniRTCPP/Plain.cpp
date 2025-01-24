@@ -33,6 +33,7 @@ Plain::Plain(
 
 Vector4D Plain::CalcNormalVector(const Vector4D& intersection, const Vector4D& rayOrigin) const
 {
+	//TODO
 	return GetNormalizedDirection();
 }
 

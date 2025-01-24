@@ -7,6 +7,7 @@
 #include "RayCastingSimulator.h"
 #include "Resolution.h"
 #include "Vector4D.h"
+#include "Windows.h"
 
 static_assert(sizeof(Vector4D) == (sizeof(float) * 4), "Vecotr4D is 4 float");
 static_assert(sizeof(Matrix4x4) == (sizeof(float) * 4 * 4), "Matrix4x4 is 4 X 4 float");
@@ -15,7 +16,41 @@ static_assert(sizeof(Color) == (sizeof(unsigned char) * 4), "Color is 4 unsigned
 const char *filename = "room_with_objs.rt";
 //"single_circle.rt";
 
-int main(int argc, char **argv)
+HWND	g_hMainWindow = nullptr;
+
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+constexpr int MAX_LOADSTRING = 64;
+
+HINSTANCE hInst;                                // current instance
+WCHAR szTitle[MAX_LOADSTRING] = L"¿¬½À¿ë";                  // The title bar text
+WCHAR szWindowClass[MAX_LOADSTRING] = L"DDD";            // the main window class name
+
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+{
+	hInst = hInstance; // Store instance handle in our global variable
+
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+
+	if (!hWnd)
+	{
+		return FALSE;
+	}
+	g_hMainWindow = hWnd;
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
+
+	return TRUE;
+}
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
 	/*if (argc != 2 || argv == NULL)
 	{
@@ -23,6 +58,17 @@ int main(int argc, char **argv)
 		return (1);
 	}*/
 	//std::string filename = argv[0];
+
+	{// init
+		if (!InitInstance(hInstance, nCmdShow))
+		{
+			return FALSE;
+		}
+
+		RayCastingSimulator::GetInstance()->Initialize(g_hMainWindow);
+
+	}
+
 	
 	std::cout << "Resolution Width  :  " << WIN_WIDTH << " Height  : " << WIN_HEIGHT <<std::endl;
 	Timer::start();

@@ -53,34 +53,60 @@
     <ClCompile Include="Ray.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="DDraw.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vector4D.h" />
     <ClInclude Include="Ray.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h" />
     <ClInclude Include="Cam.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="SceneEditer.h" />
-    <ClInclude Include="MlxManager.h" />
     <ClInclude Include="mlx.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="Plain.h" />
     <ClInclude Include="ASSERT.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
-    <ClInclude Include="RayCastingSimulator.h" />
     <ClInclude Include="Resolution.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MlxManager.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Plain.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RayCastingSimulator.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEditer.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4D.h">
+      <Filter>헤더파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DDraw.h">
       <Filter>헤더파일</Filter>
     </ClInclude>
   </ItemGroup>

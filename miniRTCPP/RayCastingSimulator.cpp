@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include "Color.h"
-
+#include "DDraw.h"
 
 RayCastingSimulator* RayCastingSimulator::instance = nullptr;
 
@@ -26,8 +26,8 @@ void RayCastingSimulator::OutPPM()
 		  << (int)pix_col.y << ' '
 		  << (int)pix_col.z << '\n';
 */
-	//try
-	{
+//try
+	/*{
 		std::ofstream ppm("output.ppm");
 		ppm << "P3\n" << WIN_WIDTH << ' ' << WIN_HEIGHT << ' ' << "255\n";
 		for (int j = 0; j < WIN_HEIGHT; j++)
@@ -40,11 +40,19 @@ void RayCastingSimulator::OutPPM()
 			}
 		}
 		ppm.close();
-	}
+	}*/
 	/*catch (const std::exception&)
 	{
 		std::cout << "Someting error out ppm " << std::endl;
 	}*/
+}
+
+void RayCastingSimulator::Initialize(HWND hWnd)
+{
+	m_hWnd = hWnd;
+	m_pDDraw = std::make_unique<CDDraw>();
+
+	m_pDDraw->InitializeDDraw(hWnd);
 }
 
 RayCastingSimulator* RayCastingSimulator::GetInstance()
@@ -56,12 +64,12 @@ RayCastingSimulator* RayCastingSimulator::GetInstance()
 
 // TODO goto Ray member function
 //find min distance Intersect Object
-void RayCastingSimulator::CalcMinDistanceObject(const Ray &ray, float * const outDistance, const Object ** outObject)
+void RayCastingSimulator::CalcMinDistanceObject(const Ray& ray, float* const outDistance, const Object** outObject)
 {
 	*outDistance = INFINITY;
 
 	//find min distance Intersect Object
-	const auto &objects = SceneManager::GetInstance()->GetObjects();
+	const auto& objects = SceneManager::GetInstance()->GetObjects();
 	for (const Object* object : objects)
 	{
 		const float distance = object->CalcIntersectDistanceOrNan(ray);
@@ -73,7 +81,7 @@ void RayCastingSimulator::CalcMinDistanceObject(const Ray &ray, float * const ou
 	}
 }
 
-int RayCastingSimulator::objectHit= 0;
+int RayCastingSimulator::objectHit = 0;
 
 Color RayCastingSimulator::castSingleRay(const Ray& ray)
 {
@@ -116,11 +124,11 @@ void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
 {
 	for (int y = 0; y < WIN_HEIGHT / 2; y++)
 	{
-		for(int x = 0; x < WIN_WIDTH/2 ; x++)
+		for (int x = 0; x < WIN_WIDTH / 2; x++)
 		{
 			Vector4D rayOrigin = SceneManager::GetInstance()->GetCam().Origin;
 			//rayOrigin.SetW(1);
-			
+
 			//ASSERT(p.first + x - WIN_WIDTH / 2 != -411 && p.second + y - WIN_HEIGHT / 2 != -36);
 			Vector4D rayNomalizedDirection = Vector4D(
 				static_cast<float>(p.first + x - WIN_WIDTH / 2),
@@ -137,10 +145,10 @@ void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
 			//ASSERT(abs(ray.GetOrigin().GetW()) < FLT_EPSILON);
 
 			const Color color = castSingleRay(ray);
-			
+
 			//TODO Editing mode add
 			mScreen[p.second + y][p.first + x] = color;
-		
+
 			//pixel[0] += (get_scene_editer()->edit + 1);
 		}
 		//pixel[1] += (get_scene_editer()->edit + 1);
@@ -148,12 +156,16 @@ void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
 	//return (NULL);
 }
 
+RayCastingSimulator::~RayCastingSimulator()
+{
+}
+
 
 void RayCastingSimulator::executeRayCasting()
 {
 	Timer::start();
 	std::pair<int, int> p[4];
-	
+
 	for (int i = 0; i < 4; i++)
 	{
 		p[i].first = WIN_WIDTH / 2 * (i / 2);
@@ -170,4 +182,62 @@ void RayCastingSimulator::executeRayCasting()
 	}
 
 	Timer::end("raycasting time");
+}
+
+
+void RayCastingSimulator::DrawScene()
+{
+	// 메시지가 없으면 게임루프
+
+	m_pDDraw->BeginDraw();
+
+	m_pDDraw->Clear();
+
+
+	m_pDDraw->DrawBitmap(0, 0, WIN_WIDTH, WIN_HEIGHT, (char *)mScreen);
+
+
+	//if (m_pBackImage)
+	//{
+	//	m_pDDraw->DrawBitmap(m_iBackImagePosX, m_iBackImagePosY, m_pBackImage->GetWidth(), m_pBackImage->GetHeight(), m_pBackImage->GetRawImage());
+	//}
+	//else
+	//{
+	//	m_pDDraw->Clear();
+	//}
+
+
+
+	//m_pDDraw->DrawRect(sx, sy, iBoxWidth, iBoxHeight, 0xff00ff00);
+
+	// Draw player
+	//INT_VECTOR2		ivPos;
+	//m_pPlayer->GetInterpolatedPos(&ivPos);
+	//m_pPlayer->GetPos(&ivPos);
+	//DrawFlightObject(m_pPlayer, ivPos.x, ivPos.y);
+
+	m_pDDraw->EndDraw();
+
+	HDC	hDC = nullptr;
+
+	// FPS 표시
+	if (m_pDDraw->BeginGDI(&hDC))
+	{
+		m_pDDraw->DrawInfo(hDC);
+		m_pDDraw->EndGDI(hDC);
+	}
+	m_pDDraw->OnDraw();
+	m_pDDraw->CheckFPS();
+	/*
+
+	// Draw Enemies
+
+
+	// Draw ammos
+
+	//DrawFPS(1, 1);
+	//DrawScore(m_iScreenWidth - 16, 1);
+
+	Blt();
+	*/
 }
