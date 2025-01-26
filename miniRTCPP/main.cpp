@@ -8,6 +8,7 @@
 #include "Resolution.h"
 #include "Vector4D.h"
 #include "Windows.h"
+#include "ASSERT.h"
 
 static_assert(sizeof(Vector4D) == (sizeof(float) * 4), "Vecotr4D is 4 float");
 static_assert(sizeof(Matrix4x4) == (sizeof(float) * 4 * 4), "Matrix4x4 is 4 X 4 float");
@@ -47,6 +48,127 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
+ATOM MyRegisterClass(HINSTANCE hInstance)
+{
+	WNDCLASSEXW wcex;
+
+	wcex.cbSize = sizeof(WNDCLASSEX);
+
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(NULL,	IDI_APPLICATION);              // predefined app. icon 
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = L"MainMenu";    // name of menu resource 
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(hInstance, // small class icon 
+		MAKEINTRESOURCE(5));
+
+	//wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+
+	return RegisterClassExW(&wcex);
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_COMMAND:
+	{
+		int wmId = LOWORD(wParam);
+		// Parse the menu selections:
+		switch (wmId)
+		{
+		//case IDM_ABOUT:
+		//	DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+		//	break;
+		//case IDM_EXIT:
+		//	DestroyWindow(hWnd);
+		//	break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	break;
+	case WM_SIZE:
+		//if (g_pGame)
+		//{
+		//	g_pGame->OnUpdateWindowSize();
+		//}
+		break;
+	case WM_MOVE:
+		/*if (g_pGame)
+		{
+			g_pGame->OnUpdateWindowPos();
+		}*/
+		break;
+	case WM_KEYDOWN:
+	{
+
+		UINT	uiScanCode = (0x00ff0000 & lParam) >> 16;
+		UINT	vkCode = MapVirtualKey(uiScanCode, MAPVK_VSC_TO_VK);
+		if (!(lParam & 0x40000000))
+		{
+			//if (g_pGame)
+			//{
+			//	g_pGame->OnKeyDown(vkCode, uiScanCode);
+			//}
+
+		}
+	}
+	break;
+	case WM_KEYUP:
+	{
+		UINT	uiScanCode = (0x00ff0000 & lParam) >> 16;
+		UINT	vkCode = MapVirtualKey(uiScanCode, MAPVK_VSC_TO_VK);
+		//if (g_pGame)
+		//{
+		//	g_pGame->OnKeyUp(vkCode, uiScanCode);
+		//}
+	}
+	break;
+	case WM_SYSKEYDOWN:
+	{
+		UINT	uiScanCode = (0x00ff0000 & lParam) >> 16;
+		UINT	vkCode = MapVirtualKey(uiScanCode, MAPVK_VSC_TO_VK);
+		BOOL	bAltKeyDown = FALSE;
+		if ((HIWORD(lParam) & KF_ALTDOWN))
+		{
+			bAltKeyDown = TRUE;
+		}
+		//if (!g_pGame->OnSysKeyDown(vkCode, uiScanCode, bAltKeyDown))
+		//{
+		//	DefWindowProc(hWnd, message, wParam, lParam);
+		//}
+	}
+	break;
+	/*case WM_KEYDOWN:
+case WM_SYSKEYDOWN:
+	if (wParam == VK_RETURN)
+		if ((HIWORD(lParam) & KF_ALTDOWN))
+			ToggleFullscreen();
+	break;*/
+
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
+		// TODO: Add any drawing code that uses hdc here...
+		EndPaint(hWnd, &ps);
+	}
+	break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
+}
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
@@ -60,13 +182,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//std::string filename = argv[0];
 
 	{// init
+
+		//LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+		//LoadStringW(hInstance, IDC_DDrawSample, szWindowClass, MAX_LOADSTRING);
+
+		MyRegisterClass(hInstance);
 		if (!InitInstance(hInstance, nCmdShow))
 		{
+			ASSERT(false);
 			return FALSE;
 		}
 
 		RayCastingSimulator::GetInstance()->Initialize(g_hMainWindow);
-
 	}
 
 	
@@ -79,16 +206,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	SceneManager::Init(filename);
 	Timer::end("initialize");
 
-	auto simulator = RayCastingSimulator::GetInstance();
+	//while (1) {
+		auto simulator = RayCastingSimulator::GetInstance();
 
-	simulator->executeRayCasting();
-	std::cout  <<  "Object Calcualte È£Ãâ È½¼ö  :  " << Object::num << std::endl;
-	Timer::start();
-	std::cout << "Object hit È£Ãâ È½¼ö  :  " << RayCastingSimulator::objectHit<< std::endl;
+		simulator->executeRayCasting();
+		
+		std::cout << "Object Calcualte È£Ãâ È½¼ö  :  " << Object::num << std::endl;
+		std::cout << "Object hit È£Ãâ È½¼ö  :  " << RayCastingSimulator::objectHit << std::endl;
 
-	simulator->OutPPM();
-	Timer::end("out ppm");
+		Timer::start();
 
+		simulator->DrawScene();
+		Timer::end("out ppm");
+
+	//}
 	Timer::end("Total time");
+	
 	return 0;
 }

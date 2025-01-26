@@ -196,26 +196,6 @@ void RayCastingSimulator::DrawScene()
 
 	m_pDDraw->DrawBitmap(0, 0, WIN_WIDTH, WIN_HEIGHT, (char *)mScreen);
 
-
-	//if (m_pBackImage)
-	//{
-	//	m_pDDraw->DrawBitmap(m_iBackImagePosX, m_iBackImagePosY, m_pBackImage->GetWidth(), m_pBackImage->GetHeight(), m_pBackImage->GetRawImage());
-	//}
-	//else
-	//{
-	//	m_pDDraw->Clear();
-	//}
-
-
-
-	//m_pDDraw->DrawRect(sx, sy, iBoxWidth, iBoxHeight, 0xff00ff00);
-
-	// Draw player
-	//INT_VECTOR2		ivPos;
-	//m_pPlayer->GetInterpolatedPos(&ivPos);
-	//m_pPlayer->GetPos(&ivPos);
-	//DrawFlightObject(m_pPlayer, ivPos.x, ivPos.y);
-
 	m_pDDraw->EndDraw();
 
 	HDC	hDC = nullptr;
@@ -226,18 +206,8 @@ void RayCastingSimulator::DrawScene()
 		m_pDDraw->DrawInfo(hDC);
 		m_pDDraw->EndGDI(hDC);
 	}
+
 	m_pDDraw->OnDraw();
 	m_pDDraw->CheckFPS();
-	/*
-
-	// Draw Enemies
-
-
-	// Draw ammos
-
-	//DrawFPS(1, 1);
-	//DrawScore(m_iScreenWidth - 16, 1);
-
-	Blt();
-	*/
+	
 }

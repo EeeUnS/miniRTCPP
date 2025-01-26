@@ -14,6 +14,7 @@ public:
 	static int objectHit;
 	void executeRayCasting();
 	void DrawScene();
+	void OnDraw();
 	void OutPPM();
 	void Initialize(HWND window);
 	static RayCastingSimulator* GetInstance();
