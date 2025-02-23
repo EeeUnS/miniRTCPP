@@ -20,7 +20,7 @@ CDDraw::CDDraw()
 
 BOOL CDDraw::InitializeDDraw(HWND hWnd)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 	m_hWnd = hWnd;
 
@@ -88,7 +88,7 @@ GOTO_BEGIN
 		GOTO_OUT;
 	}
 
-	bResult = TRUE;
+	bResult = true;
 
 GOTO_END
 	return bResult;
@@ -98,7 +98,7 @@ GOTO_END
 
 BOOL CDDraw::CreateBackBuffer(DWORD dwWidth, DWORD dwHeight)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 	DDSURFACEDESC2 ddsd = {};
 	ddsd.dwSize = sizeof(DDSURFACEDESC2);
@@ -117,7 +117,7 @@ GOTO_BEGIN
 	m_pDDBack->GetSurfaceDesc(&ddsd);
 	m_dwWidth = ddsd.dwWidth;
 	m_dwHeight = ddsd.dwHeight;
-	bResult = TRUE;
+	bResult = true;
 GOTO_END
 
 	return bResult;
@@ -140,7 +140,7 @@ void CDDraw::Clear()
 
 BOOL CDDraw::LockBackBuffer(char** ppBits, DWORD* pdwWidth, DWORD* pdwHeight, DWORD* pdwPitch)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 	if (m_pDDBack)
 	{
@@ -157,7 +157,7 @@ BOOL CDDraw::LockBackBuffer(char** ppBits, DWORD* pdwWidth, DWORD* pdwHeight, DW
 		*pdwHeight = ddsc.dwHeight;
 	}
 
-	bResult = TRUE;
+	bResult = true;
 	return bResult;
 }
 void CDDraw::UnlockBackBuffer()
@@ -256,7 +256,7 @@ void CDDraw::DrawRect(int sx, int sy, int iWidth, int iHeight, DWORD dwColor)
 
 static BOOL CalcClipArea(INT_VECTOR2* pivOutSrcStart, INT_VECTOR2* pivOutDestStart, INT_VECTOR2* pivOutDestSize, const INT_VECTOR2* pivPos, const INT_VECTOR2* pivImageSize, const INT_VECTOR2* pivBufferSize)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 	//
 	int dest_start_x = max(pivPos->x, 0);
 	int dest_start_y = max(pivPos->y, 0);
@@ -283,7 +283,7 @@ GOTO_BEGIN
 	pivOutDestStart->y = dest_start_y;
 	pivOutDestSize->x = width;
 	pivOutDestSize->y = height;
-	bResult = TRUE;
+	bResult = true;
 GOTO_END
 	return bResult;
 }
@@ -296,7 +296,7 @@ BOOL CDDraw::CalcClipArea(INT_VECTOR2* pivOutSrcStart, INT_VECTOR2* pivOutDestSt
 }
 BOOL CDDraw::BeginDraw()
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 	char*	pBuffer = nullptr;
 	DWORD	dwBufferWidth = 0;
@@ -318,7 +318,7 @@ BOOL CDDraw::BeginDraw()
 #endif
 	m_pLockedBackBuffer = pBuffer;
 	m_dwLockedBackBufferPitch = dwPitch;
-	bResult = TRUE;
+	bResult = true;
 lb_return:
 	return bResult;
 }
@@ -330,7 +330,7 @@ void CDDraw::EndDraw()
 }
 BOOL CDDraw::DrawBitmap(int sx, int sy, int iBitmapWidth, int iBitmapHeight, char* pBits)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 #ifdef _DEBUG
 	if (!m_pLockedBackBuffer)
@@ -367,7 +367,7 @@ BOOL CDDraw::DrawBitmap(int sx, int sy, int iBitmapWidth, int iBitmapHeight, cha
 			pDest += m_dwLockedBackBufferPitch;
 		}
 		//
-		bResult = TRUE;
+		bResult = true;
 	}
 lb_return:
 	return bResult;
@@ -376,7 +376,7 @@ lb_return:
 
 BOOL CDDraw::DrawBitmapWithColorKey(int sx, int sy, int iBitmapWidth, int iBitmapHeight, char* pBits, DWORD dwColorKey)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 
 #ifdef _DEBUG
 	if (!m_pLockedBackBuffer)
@@ -416,7 +416,7 @@ GOTO_BEGIN
 		pDest += m_dwLockedBackBufferPitch;
 	}
 	//
-	bResult = TRUE;
+	bResult = true;
 GOTO_END
 	return bResult;
 
@@ -424,7 +424,7 @@ GOTO_END
 
 //BOOL CDDraw::DrawImageData(int sx, int sy, const CImageData* pImgData)
 //{
-//	BOOL	bResult = FALSE;
+//	BOOL	bResult = false;
 //
 //#ifdef _DEBUG
 //	if (!m_pLockedBackBuffer)
@@ -479,7 +479,7 @@ GOTO_END
 //		pDestPerLine += m_dwLockedBackBufferPitch;
 //	}
 //	//
-//	bResult = TRUE;
+//	bResult = true;
 //lb_return:
 //	return bResult;
 //
@@ -492,7 +492,7 @@ void CDDraw::UpdateInfoTxt()
 }
 BOOL CDDraw::CheckFPS()
 {
-	BOOL	bUpdated = FALSE;
+	BOOL	bUpdated = false;
 
 	ULONGLONG CurTick = GetTickCount64();
 	if (CurTick - m_LastDrawTick > 1000)
@@ -505,7 +505,7 @@ BOOL CDDraw::CheckFPS()
 		if (m_dwFPS != dwOldPFS)
 		{
 			UpdateInfoTxt();
-			bUpdated = TRUE;
+			bUpdated = true;
 		}
 	}
 	m_dwFrameCount++;
@@ -535,7 +535,7 @@ void CDDraw::ProcessGDI(HDC hDC)
 }
 BOOL CDDraw::BeginGDI(HDC* pOutDC)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 	HDC	hDC = nullptr;
 
 	HRESULT hr = m_pDDBack->GetDC(&hDC);
@@ -546,7 +546,7 @@ BOOL CDDraw::BeginGDI(HDC* pOutDC)
 	#endif
 		goto lb_return;
 	}
-	bResult = TRUE;
+	bResult = true;
 	*pOutDC = hDC;
 
 lb_return:
@@ -618,7 +618,7 @@ void CDDraw::WriteText(const WCHAR* wchTxt, DWORD dwLen, int x, int y, DWORD dwC
 
 BOOL CDDraw::GetFontSize(int* piOutWidth, int* piOutHeight, const WCHAR* wchString, DWORD dwStrLen, HDC hDC)
 {
-	BOOL	bResult = FALSE;
+	BOOL	bResult = false;
 	*piOutWidth = 1;
 	*piOutHeight = 1;
 
@@ -630,7 +630,7 @@ BOOL CDDraw::GetFontSize(int* piOutWidth, int* piOutHeight, const WCHAR* wchStri
 	{
 		*piOutWidth = strSize.cx;
 		*piOutHeight = strSize.cy;
-		bResult = TRUE;
+		bResult = true;
 	}
 	return bResult;
 }

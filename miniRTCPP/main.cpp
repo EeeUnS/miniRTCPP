@@ -39,13 +39,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	if (!hWnd)
 	{
-		return FALSE;
+		return false;
 	}
 	g_hMainWindow = hWnd;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	return TRUE;
+	return true;
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
@@ -134,10 +134,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		UINT	uiScanCode = (0x00ff0000 & lParam) >> 16;
 		UINT	vkCode = MapVirtualKey(uiScanCode, MAPVK_VSC_TO_VK);
-		BOOL	bAltKeyDown = FALSE;
+		BOOL	bAltKeyDown = false;
 		if ((HIWORD(lParam) & KF_ALTDOWN))
 		{
-			bAltKeyDown = TRUE;
+			bAltKeyDown = true;
 		}
 		//if (!g_pGame->OnSysKeyDown(vkCode, uiScanCode, bAltKeyDown))
 		//{
@@ -190,7 +190,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		if (!InitInstance(hInstance, nCmdShow))
 		{
 			ASSERT(false);
-			return FALSE;
+			return false;
 		}
 
 		RayCastingSimulator::GetInstance()->Initialize(g_hMainWindow);

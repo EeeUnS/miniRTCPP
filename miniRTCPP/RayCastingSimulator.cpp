@@ -149,9 +149,9 @@ void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
 			//TODO Editing mode add
 			mScreen[p.second + y][p.first + x] = color;
 
-			//pixel[0] += (get_scene_editer()->edit + 1);
+			//pixel[0] += (GetSceneEditer()->edit + 1);
 		}
-		//pixel[1] += (get_scene_editer()->edit + 1);
+		//pixel[1] += (GetSceneEditer()->edit + 1);
 	}
 	//return (NULL);
 }
@@ -176,10 +176,14 @@ void RayCastingSimulator::executeRayCasting()
 	subRayCast(p[1]);
 	subRayCast(p[2]);
 	subRayCast(p[3]);*/
-	for (int i = 0; i < 4; i++)
+	//while (1)
 	{
-		subRayCast(p[i]);
+		for (int i = 0; i < 4; i++)
+		{
+			subRayCast(p[i]);
+		}
 	}
+	
 
 	Timer::end("raycasting time");
 }
