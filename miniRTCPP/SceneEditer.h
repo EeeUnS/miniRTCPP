@@ -25,7 +25,7 @@ class SceneEditer
 public:
 	Object* selectedObject = nullptr;
 	Light* selectedLight = nullptr;
-	Object* selectedObject = nullptr;
+	//Object* selectedObject = nullptr;
 	unsigned int		edit;
 
 	//bool isEditMode = false;

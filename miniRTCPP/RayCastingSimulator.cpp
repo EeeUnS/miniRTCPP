@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Color.h"
 #include "DDraw.h"
+#include "future"
 
 RayCastingSimulator* RayCastingSimulator::instance = nullptr;
 
@@ -47,12 +48,38 @@ void RayCastingSimulator::OutPPM()
 	}*/
 }
 
+
+//void SubProcedure(int i)
+//{
+//	RayCastingSimulator *simulator = RayCastingSimulator::GetInstance();
+//	while (simulator->m_Exit[i])
+//	{
+//		WaitForSingleObject(, INFINITE);
+//
+//		simulator->subRayCast(simulator->m_xyStartPair[i]);
+//	}
+//}
+
 void RayCastingSimulator::Initialize(HWND hWnd)
 {
 	m_hWnd = hWnd;
 	m_pDDraw = std::make_unique<CDDraw>();
 
 	m_pDDraw->InitializeDDraw(hWnd);
+
+	
+	for (int i = 0; i < nThreadCount; i++)
+	{
+		m_xyStartPair[i].first = WIN_WIDTH / 2 * (i / 2);
+		m_xyStartPair[i].second = WIN_HEIGHT / 2 * (i % 2);
+		//m_Exit[i] = false;
+	}
+
+	//for (int i = 0 ; i < nThreadCount ; ++i )
+	//{
+	//	//m_MultiThread[i] = std::thread(SubProcedure, i);
+	//}
+	
 }
 
 RayCastingSimulator* RayCastingSimulator::GetInstance()
@@ -120,19 +147,19 @@ Color RayCastingSimulator::castSingleRay(const Ray& ray)
 	return color;
 }
 
-void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
+void RayCastingSimulator::subRayCast(const std::pair<int, int>& m_xyStartPair)
 {
 	for (int y = 0; y < WIN_HEIGHT / 2; y++)
 	{
 		for (int x = 0; x < WIN_WIDTH / 2; x++)
 		{
-			Vector4D rayOrigin = SceneManager::GetInstance()->GetCam().Origin;
+			const Vector4D rayOrigin = SceneManager::GetInstance()->GetCam().Origin;
 			//rayOrigin.SetW(1);
 
 			//ASSERT(p.first + x - WIN_WIDTH / 2 != -411 && p.second + y - WIN_HEIGHT / 2 != -36);
 			Vector4D rayNomalizedDirection = Vector4D(
-				static_cast<float>(p.first + x - WIN_WIDTH / 2),
-				static_cast<float>(p.second + y - WIN_HEIGHT / 2),
+				static_cast<float>(m_xyStartPair.first + x - WIN_WIDTH / 2),
+				static_cast<float>(m_xyStartPair.second + y - WIN_HEIGHT / 2),
 				static_cast<float>(SceneManager::GetInstance()->GetCam().DistanceCamToScreen)
 			);
 			rayNomalizedDirection = rayNomalizedDirection.Normalize();
@@ -147,7 +174,7 @@ void RayCastingSimulator::subRayCast(const std::pair<int, int>& p)
 			const Color color = castSingleRay(ray);
 
 			//TODO Editing mode add
-			mScreen[p.second + y][p.first + x] = color;
+			mScreen[m_xyStartPair.second + y][m_xyStartPair.first + x] = color;
 
 			//pixel[0] += (GetSceneEditer()->edit + 1);
 		}
@@ -164,26 +191,25 @@ RayCastingSimulator::~RayCastingSimulator()
 void RayCastingSimulator::executeRayCasting()
 {
 	Timer::start();
-	std::pair<int, int> p[4];
+
+
+	/*for (int i = 0; i < 4; i++)
+	{
+		subRayCast( m_xyStartPair[i]);
+	}*/
+
+	std::future<void> a[4];
 
 	for (int i = 0; i < 4; i++)
 	{
-		p[i].first = WIN_WIDTH / 2 * (i / 2);
-		p[i].second = WIN_HEIGHT / 2 * (i % 2);
-	}
-
-	/*subRayCast(p[0]);
-	subRayCast(p[1]);
-	subRayCast(p[2]);
-	subRayCast(p[3]);*/
-	//while (1)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			subRayCast(p[i]);
-		}
+		a[i] = std::async(std::launch::async, &RayCastingSimulator::subRayCast, this, m_xyStartPair[i]);
 	}
 	
+	for (int i = 0; i < 4; i++)
+	{
+		a[i].wait();
+	}
+
 
 	Timer::end("raycasting time");
 }

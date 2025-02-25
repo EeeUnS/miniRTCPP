@@ -1,0 +1,79 @@
+debug 모드
+
+async 사용
+
+Resolution Width  :  1920 Height  : 1080
+starting timer
+starting timer
+initialize takes 0 ms
+starting timer
+raycasting time takes 19290 ms
+Object Calcualte 호출 횟수  :  54718559
+Object hit 호출 횟수  :  2073600
+starting timer
+out ppm takes 17 ms
+Total time takes 19309 ms
+
+
+for
+
+Resolution Width  :  1920 Height  : 1080
+starting timer
+starting timer
+initialize takes 0 ms
+starting timer
+raycasting time takes 19461 ms
+Object Calcualte ??? ???  :  54718559
+Object hit ??? ???  :  2073600
+starting timer
+out ppm takes 18 ms
+Total time takes 19480 ms
+
+
+
+async async
+
+Resolution Width  :  1920 Height  : 1080
+starting timer
+starting timer
+initialize takes 0 ms
+starting timer
+raycasting time takes 7155 ms
+Object Calcualte ??? ???  :  47119261
+Object hit ??? ???  :  2059618
+starting timer
+out ppm takes 19 ms
+Total time takes 7176 ms
+
+
+release모드
+
+단순 for
+
+raycasting time takes 1018 ms
+Object Calcualte ??? ???  :  981777805
+Object hit ??? ???  :  79792513
+starting timer
+out ppm takes 2 ms
+
+async
+
+starting timer
+raycasting time takes 1621 ms
+Object Calcualte ??? ???  :  492467031
+Object hit ??? ???  :  18662400
+starting timer
+out ppm takes 2 ms
+starting timer
+
+
+release모드
+480p
+
+raycasting time takes 197 ms
+Object Calcualte ??? ???  :  145367037
+Object hit ??? ???  :  11185107
+starting timer
+out ppm takes 1 ms
+starting timer
+6frame

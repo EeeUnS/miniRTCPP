@@ -2,13 +2,16 @@
 #include "Timer.h"
 #include <iostream>
 #include "ASSERT.h"
+#include <fstream>
+
+extern std::fstream outfile;
 
 std::vector<std::chrono::steady_clock::time_point> chrono;
 
 void Timer::start()
 {
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-    std::cout << "starting timer" << std::endl;
+    outfile << "starting timer" << std::endl;
     chrono.push_back(start);
 }
 
@@ -20,6 +23,6 @@ void Timer::end(const std::string& Information)
     chrono.pop_back();
     auto end = std::chrono::steady_clock::now() - start;
 
-    std::cout << Information << " takes " << std::chrono::duration_cast<std::chrono::milliseconds>(end).count()
+    outfile << Information << " takes " << std::chrono::duration_cast<std::chrono::milliseconds>(end).count()
         << " ms" << std::endl;
 }

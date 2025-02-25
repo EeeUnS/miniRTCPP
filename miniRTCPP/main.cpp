@@ -9,6 +9,9 @@
 #include "Vector4D.h"
 #include "Windows.h"
 #include "ASSERT.h"
+#include "fstream"
+
+std::fstream outfile ("output.txt", std::ios::out);
 
 static_assert(sizeof(Vector4D) == (sizeof(float) * 4), "Vecotr4D is 4 float");
 static_assert(sizeof(Matrix4x4) == (sizeof(float) * 4 * 4), "Matrix4x4 is 4 X 4 float");
@@ -35,7 +38,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // Store instance handle in our global variable
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+		CW_USEDEFAULT, 0, WIN_WIDTH, WIN_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -197,7 +200,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	
-	std::cout << "Resolution Width  :  " << WIN_WIDTH << " Height  : " << WIN_HEIGHT <<std::endl;
+	outfile << "Resolution Width  :  " << WIN_WIDTH << " Height  : " << WIN_HEIGHT <<std::endl;
 	Timer::start();
 	
 	//MlxManager::Init(filename);
@@ -206,20 +209,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	SceneManager::Init(filename);
 	Timer::end("initialize");
 
-	//while (1) {
+	while (1) {
 		auto simulator = RayCastingSimulator::GetInstance();
 
 		simulator->executeRayCasting();
 		
-		std::cout << "Object Calcualte È£Ãâ È½¼ö  :  " << Object::num << std::endl;
-		std::cout << "Object hit È£Ãâ È½¼ö  :  " << RayCastingSimulator::objectHit << std::endl;
+		outfile << "Object Calcualte È£Ãâ È½¼ö  :  " << Object::num << std::endl;
+		outfile << "Object hit È£Ãâ È½¼ö  :  " << RayCastingSimulator::objectHit << std::endl;
 
 		Timer::start();
 
 		simulator->DrawScene();
+		
 		Timer::end("out ppm");
 
-	//}
+	}
 	Timer::end("Total time");
 	
 	return 0;

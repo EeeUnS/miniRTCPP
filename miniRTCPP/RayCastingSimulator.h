@@ -7,6 +7,7 @@
 #include "Windows.h"
 #include "DDraw.h"
 #include <memory>
+#include <thread>
 
 class RayCastingSimulator
 {
@@ -19,16 +20,24 @@ public:
 	void Initialize(HWND window);
 	static RayCastingSimulator* GetInstance();
 	void CalcMinDistanceObject(const Ray& ray, float* const outDistance, const Object** outObject);
+	
+	static constexpr int nThreadCount = 4;
+	void subRayCast(const std::pair<int, int>& m_xyStartPair);
+	std::pair<int, int> m_xyStartPair[nThreadCount];
+	bool m_Exit[nThreadCount];
+	bool m_JobEnd[nThreadCount];
+
 private:
+
 	RayCastingSimulator();
 	Color castSingleRay(const Ray& ray);
-	void subRayCast(const std::pair<int, int>& p);
+	
 
 	HWND m_hWnd = nullptr;
 	std::unique_ptr<CDDraw> m_pDDraw = nullptr;
 	
 	DWORD m_dwCurFPS = 0;
-
+	std::thread m_MultiThread[nThreadCount];
 
 	Color mScreen[WIN_HEIGHT][WIN_WIDTH];
 	~RayCastingSimulator();
