@@ -197,17 +197,21 @@ void RayCastingSimulator::executeRayCasting()
 	{
 		subRayCast( m_xyStartPair[i]);
 	}*/
-
-	std::future<void> a[4];
-
-	for (int i = 0; i < 4; i++)
+	if (m_doUpdate)
 	{
-		a[i] = std::async(std::launch::async, &RayCastingSimulator::subRayCast, this, m_xyStartPair[i]);
-	}
+		std::future<void> a[4];
+
+		for (int i = 0; i < 4; i++)
+		{
+			a[i] = std::async(std::launch::async, &RayCastingSimulator::subRayCast, this, m_xyStartPair[i]);
+		}
 	
-	for (int i = 0; i < 4; i++)
-	{
-		a[i].wait();
+		for (int i = 0; i < 4; i++)
+		{
+			a[i].wait();
+		}
+
+		m_doUpdate = false;
 	}
 
 

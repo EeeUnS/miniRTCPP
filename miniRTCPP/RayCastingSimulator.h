@@ -28,7 +28,7 @@ public:
 	bool m_JobEnd[nThreadCount];
 
 private:
-
+	bool m_doUpdate = true;
 	RayCastingSimulator();
 	Color castSingleRay(const Ray& ray);
 	
