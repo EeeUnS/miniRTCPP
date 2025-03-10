@@ -36,8 +36,6 @@ WCHAR szWindowClass[MAX_LOADSTRING] = L"DDD";            // the main window clas
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-	std::deque<int> a;
-	a.emplace_back(1);
 	hInst = hInstance; // Store instance handle in our global variable
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
@@ -226,6 +224,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		
 		Timer::end("out ppm");
 
+	//	simulator->OutPPM();
 	}
 	Timer::end("Total time");
 	

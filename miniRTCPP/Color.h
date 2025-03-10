@@ -7,6 +7,8 @@ class Color
 public:
 	Color();
 	Color(unsigned char r, unsigned char g, unsigned char b);
+	Color(unsigned int r);
+
 	unsigned int ToHex() const;
 	Color operator+(const Color& a) const;
 	Color operator*(const Color& a) const;
@@ -25,10 +27,10 @@ private:
 	{
 		unsigned int mColor;
 		struct{
-			unsigned char mAlpha;
-			unsigned char mRed;
-			unsigned char mGreen;
 			unsigned char mBlue;
+			unsigned char mGreen;
+			unsigned char mRed;
+			unsigned char mAlpha;
 		};
 	};
 };

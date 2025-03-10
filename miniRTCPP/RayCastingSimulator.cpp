@@ -27,8 +27,8 @@ void RayCastingSimulator::OutPPM()
 		  << (int)pix_col.y << ' '
 		  << (int)pix_col.z << '\n';
 */
-//try
-	/*{
+	try
+	{
 		std::ofstream ppm("output.ppm");
 		ppm << "P3\n" << WIN_WIDTH << ' ' << WIN_HEIGHT << ' ' << "255\n";
 		for (int j = 0; j < WIN_HEIGHT; j++)
@@ -36,16 +36,16 @@ void RayCastingSimulator::OutPPM()
 			for (int i = 0; i < WIN_WIDTH; i++)
 			{
 				char arr[32];
-				sprintf(arr, "%d %d %d\n", static_cast<int>(mScreen[j][i].GetRed()), static_cast<int>(mScreen[j][i].GetGreen()), static_cast<int>(mScreen[j][i].GetBlue()));
+				sprintf_s(arr, "%d %d %d\n", static_cast<int>(mScreen[j][i].GetRed()), static_cast<int>(mScreen[j][i].GetGreen()), static_cast<int>(mScreen[j][i].GetBlue()));
 				ppm << arr;
 			}
 		}
 		ppm.close();
-	}*/
-	/*catch (const std::exception&)
+	}
+	catch (const std::exception&)
 	{
 		std::cout << "Someting error out ppm " << std::endl;
-	}*/
+	}
 }
 
 
@@ -239,5 +239,5 @@ void RayCastingSimulator::DrawScene()
 
 	m_pDDraw->OnDraw();
 	m_pDDraw->CheckFPS();
-	
+
 }

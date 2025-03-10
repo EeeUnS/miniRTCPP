@@ -301,7 +301,8 @@ Color Object::CalcPhongModelColor(const Ray& ray, const float distance) const
 
 	unsigned int a = ambientColor.ToHex() + specularAndDiffuseColor.ToHex();
 	ASSERT((a & 0xFF) == 0);
-	Color	color((a >> 8) & 0xFF, (a >> 16) & 0xFF, (a >> 24) & 0xFF);
+	Color *aa = (Color * )&a;
+	Color	color(aa->GetRed(), aa->GetGreen(), aa->GetBlue());
 
 	return color;
 }

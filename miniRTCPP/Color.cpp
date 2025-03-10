@@ -8,6 +8,10 @@ Color::Color() : mRed(0), mGreen(0), mBlue(0), mAlpha(0)
 Color::Color(unsigned char r, unsigned char g, unsigned char b) : mAlpha(0), mRed(r), mGreen(g), mBlue(b)
 {}
 
+Color::Color(unsigned int r) : mColor(r)
+{
+}
+
 unsigned int Color::ToHex() const
 {
 	return (mColor);
