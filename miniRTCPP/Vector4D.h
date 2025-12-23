@@ -1,4 +1,6 @@
 #pragma once
+
+#define USE_SIMD 
 #include <smmintrin.h>
 
 class Vector4D
